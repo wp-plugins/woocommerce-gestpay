@@ -59,7 +59,7 @@ function init_gestpay_gateway() {
       $this->title = $this->settings['title'];
       $this->description = $this->settings['description'];
       $this->shopLogin = $this->settings['shopLogin'];
-      $this->gestpay_processUrl = ($this->settings['gestpay_processUrl'] == "yes" ? "TRUE" : "FALSE");
+      $this->gestpay_processUrl = ($this->settings['gestpay_processUrl'] == "yes" ? true : false);
       $this->transactionDate = date('Y-m-d H:i:s O');
       //$this->gestpay_account_type = $this->settings['gestpay_account_type']; // Advanced/Basic
 
@@ -229,10 +229,11 @@ function init_gestpay_gateway() {
         $this->liveurl = "https://testecomm.sella.it/gestpay/pagam.asp";
       }
       else {
-        $gestpay_ws_crypt_url = "https://ecomm.sella.it/gestpay/gestpayws/WSCryptDecrypt.asmx?WSDL";
+        //$gestpay_ws_crypt_url = "https://ecomm.sella.it/gestpay/gestpayws/WSCryptDecrypt.asmx?WSDL";
+        $gestpay_ws_crypt_url = "https://ecomms2s.sella.it/gestpay/gestpayws/WSCryptDecrypt.asmx?WSDL";
         $this->liveurl = "https://ecomm.sella.it/gestpay/pagam.asp";
       }
-
+     
       // Set currency code
       $gestpay_allowed_currency_codes = array(
           'USD' => '1',
@@ -385,7 +386,8 @@ function init_gestpay_gateway() {
           $gestpay_ws_crypt_url = "https://testecomm.sella.it/gestpay/gestpayws/WSCryptDecrypt.asmx?WSDL";
         }
         else {
-          $gestpay_ws_crypt_url = "https://ecomm.sella.it/gestpay/gestpayws/WSCryptDecrypt.asmx?WSDL";
+          //$gestpay_ws_crypt_url = "https://ecomm.sella.it/gestpay/gestpayws/WSCryptDecrypt.asmx?WSDL";
+          $gestpay_ws_crypt_url = "https://ecomms2s.sella.it/gestpay/gestpayws/WSCryptDecrypt.asmx?WSDL";
         }
 
         // Create a SOAP client using the GestPay webservice
