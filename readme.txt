@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woocommerce, credit card, gestpay, banca sella, sella.it
 Requires at least: 3.0.1
 Tested up to: 3.4
-Stable tag: 1.0
+Stable tag: 1.0.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,7 +54,8 @@ Send me an email at **info@mauromascia.com** and we'll talk about it.
 
 == Changelog ==
 
+= 1.0.1 =
+* Added: Better error handling
+
 = 1.0 =
 * First release
-
-`<?php code(); // goes in backticks ?>`

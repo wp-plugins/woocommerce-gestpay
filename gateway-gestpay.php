@@ -3,7 +3,7 @@
   Plugin Name: WooCommerce GestPay Redirect Gateway (Basic version)
   Plugin URI: http://www.mauromascia.com/portfolio/wordpress-woocommerce-gestpay
   Description: Extends WooCommerce providing the Basic version of the GestPay (Banca Sella) redirect gateway for WooCommerce.
-  Version: 1.0
+  Version: 1.0.1
   Author: Mauro Mascia (baba_mmx)
   Author URI: http://www.mauromascia.com
   License: GPLv2
@@ -26,7 +26,14 @@
  */
 
 /*
- * Useful doc: http://wcdocs.woothemes.com/codex/extending/payment-gateway-api/
+ * Useful doc:
+ * - http://wcdocs.woothemes.com/codex/extending/payment-gateway-api/
+ * 
+ * Banca sella / Gestpay related useful doc:
+ * - http://service.easynolo.it/download/GestPaySpecifichetecnichecrittografia2.1.pdf
+ * - http://faustinelli.wordpress.com/2011/12/11/banca-sella-ws-for-dummies-i-web-services-di-banca-sella/
+ * - http://www.mariaserenapiccioni.com/2010/10/come-criptare-i-dati-da-inviare-a-banca-sella-usando-il-webservice-wscryptdecrypt/
+ * - http://www.openbrain.it/pagamento-con-banca-sella/
  */
 
 add_action('plugins_loaded', 'init_gestpay_gateway', 0);
@@ -295,7 +302,7 @@ function init_gestpay_gateway() {
         $client = new SoapClient($gestpay_ws_crypt_url);
       }
       catch (Exception $e) {
-        $err = __("Fatal Error: Soap Client Exception", 'woocommerce_gestpay');
+        $err = __("Fatal Error: Soap Client Request Exception", 'woocommerce_gestpay');
         $this->msg['class'] = 'woocommerce_error';
         $this->msg['message'] = $err . " [{$e->getMessage()}]";
         echo $this->show_message("");
@@ -321,7 +328,7 @@ function init_gestpay_gateway() {
       }
 
       $xml = simplexml_load_string($objectresult->EncryptResult->any);
-
+      
       // Check if the encryption call can be accepted
       if ($xml->TransactionResult == "KO") {
         $err = __("Fatal Error: Transaction Result Error", 'woocommerce_gestpay');
@@ -395,7 +402,7 @@ function init_gestpay_gateway() {
           $client = new SoapClient($gestpay_ws_crypt_url);
         }
         catch (Exception $e) {
-          $err = __("Fatal Error: Soap Client Exception", 'woocommerce_gestpay');
+          $err = __("Fatal Error: Soap Client Response Exception", 'woocommerce_gestpay');
           $this->msg['class'] = 'woocommerce_error';
           $this->msg['message'] = $err . " [{$e->getMessage()}]";
           echo $this->show_message("");
