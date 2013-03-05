@@ -3,9 +3,9 @@ Contributors: baba_mmx
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WZHXKXW5M36D4
 Tags: woocommerce, credit card, gestpay, banca sella, sella.it
 Requires at least: 3.0.1
-Tested up to: 3.4
-Stable tag: 1.0.1
-License: GPLv2
+Tested up to: 3.5.1
+Stable tag: 2.0
+License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Extends WooCommerce providing the Basic version of the GestPay (Banca Sella) redirect gateway for WooCommerce.
@@ -53,6 +53,9 @@ Send me an email at **info@mauromascia.com** and we'll talk about it.
 3. Configuration panel
 
 == Changelog ==
+
+= 2.0 =
+* Updated code for the last WooCommerce version (2.0)
 
 = 1.0.1 =
 * Added: Better error handling

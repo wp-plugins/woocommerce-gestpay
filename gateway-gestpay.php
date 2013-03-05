@@ -3,7 +3,7 @@
   Plugin Name: WooCommerce GestPay Redirect Gateway (Basic version)
   Plugin URI: http://www.mauromascia.com/portfolio/wordpress-woocommerce-gestpay
   Description: Extends WooCommerce providing the Basic version of the GestPay (Banca Sella) redirect gateway for WooCommerce.
-  Version: 1.0.1
+  Version: 2.0
   Author: Mauro Mascia (baba_mmx)
   Author URI: http://www.mauromascia.com
   License: GPLv2
@@ -28,7 +28,7 @@
 /*
  * Useful doc:
  * - http://wcdocs.woothemes.com/codex/extending/payment-gateway-api/
- * 
+ *
  * Banca sella / Gestpay related useful doc:
  * - http://service.easynolo.it/download/GestPaySpecifichetecnichecrittografia2.1.pdf
  * - http://faustinelli.wordpress.com/2011/12/11/banca-sella-ws-for-dummies-i-web-services-di-banca-sella/
@@ -40,16 +40,41 @@ add_action('plugins_loaded', 'init_gestpay_gateway', 0);
 
 function init_gestpay_gateway() {
 
-  if (!class_exists('woocommerce_payment_gateway'))
+  if (!class_exists('WC_Payment_Gateways'))
     return;
 
-  class woocommerce_gestpay extends woocommerce_payment_gateway {
+  if ( version_compare( WOOCOMMERCE_VERSION, '2.0.0', '<' ) ) {
+    echo "<br><strong>Please update WooCommerce to the last version or restore the previous GestPay version.</strong><br>";
+    echo "<br><strong>Perfavore, aggiorna Woocommerce all'ultima versione oppure ripristina la precedente versione di GestPay</strong><br><br>";
+    return;
+  }
+
+  /**
+   * Add the gateway to WooCommerce.
+   *
+   * @access public
+   * @param array $methods
+   * @return array
+   */
+  add_filter( 'woocommerce_payment_gateways', 'woocommerce_gestpay_add_gateway' );
+
+  function woocommerce_gestpay_add_gateway( $methods ) {
+      $methods[] = 'WC_Gateway_Gestpay';
+      return $methods;
+  }
+
+  /**
+   * Gateway's Constructor.
+   *
+   * @return void
+   */
+  class WC_Gateway_Gestpay extends WC_Payment_Gateway {
 
     public function __construct() {
       global $woocommerce;
 
       $this->id = 'gestpay';
-      $this->method_title = __('Gestpay', 'woothemes');
+      $this->method_title = __('Gestpay', 'woocommerce_gestpay');
       $this->logo = WP_PLUGIN_URL . "/" . plugin_basename(dirname(__FILE__)) . '/images/gestpay.jpg';
       $this->icon = WP_PLUGIN_URL . "/" . plugin_basename(dirname(__FILE__)) . '/images/gestpay-cards.jpg';
 
@@ -71,16 +96,17 @@ function init_gestpay_gateway() {
       //$this->gestpay_account_type = $this->settings['gestpay_account_type']; // Advanced/Basic
 
       $this->has_fields = false; // doesn't output a payment_box containing direct payment form
+
       /*
        * ==========   See ADVANCED-VERSION-NOTES in the readme file   ==========
-       * 
+       *
        *  if ($this->gestpay_account_type == 'Advanced') {
        *      $this->has_fields = true;
        *  }
        *  else {
        *      $this->has_fields = false;
        *  }
-       * 
+       *
        * is needed.
        */
 
@@ -92,7 +118,10 @@ function init_gestpay_gateway() {
       add_action('init', array(&$this, 'check_gestpay_response'));
       add_action('valid-gestpay-request', array(&$this, 'successful_request'));
       add_action('woocommerce_receipt_gestpay', array(&$this, 'receipt_page'));
-      add_action('woocommerce_update_options_payment_gateways', array(&$this, 'process_admin_options'));
+
+      // Add the ID in WC 2.0
+      add_action('woocommerce_update_options_payment_gateways_' . $this->id, array(&$this, 'process_admin_options'));
+
       add_action('woocommerce_thankyou_gestpay', array(&$this, 'thankyou_page'));
     }
 
@@ -147,10 +176,10 @@ function init_gestpay_gateway() {
               'default' => 'yes'
           ),
               /* ==========   See ADVANCED-VERSION-NOTES in the readme file   ==========
-               * 
+               *
                * If will be added the ADVANCED version code, also the choice of the
                * basic or the advanced version must be enable.
-               * 
+               *
                 'gestpay_account_type' => array(
                 'title' => __( 'GestPay Account Type:', 'woocommerce_gestpay' ),
                 'type' => 'select',
@@ -165,7 +194,7 @@ function init_gestpay_gateway() {
 // End init_form_fields()
 
     /**
-     * Admin Panel Options 
+     * Admin Panel Options
      */
     public function admin_options() {
       ?>
@@ -189,7 +218,7 @@ function init_gestpay_gateway() {
      * payment_fields is shown on the checkout page and slides out to reveal the
      * content when the gateway is selected. This function is used by direct
      * gateways to show payment fields for things like credit card numbers.
-     * 
+     *
      * There are no payment fields for gestpay, but we want to show the description if set.
      */
     function payment_fields() {
@@ -206,7 +235,7 @@ function init_gestpay_gateway() {
        * website page, so each string shown here isn't shown really. The only
        * way this string is visible is if there are errors (there is not redirect)
        * but in this case, isn't useful to show the following string:
-       * 
+       *
        * echo '<p>'.__('Thank you for your order, please click the button below to pay with gestpay.', 'woocommerce_gestpay').'</p>';
        */
 
@@ -228,7 +257,7 @@ function init_gestpay_gateway() {
      */
     public function generate_gestpay_form($order_id) {
       global $woocommerce;
-      $order = &new woocommerce_order($order_id);
+      $order = new WC_Order( $order_id );
 
       // Set Web Service process url to test or real
       if ($this->gestpay_processUrl) {
@@ -240,7 +269,7 @@ function init_gestpay_gateway() {
         $gestpay_ws_crypt_url = "https://ecomms2s.sella.it/gestpay/gestpayws/WSCryptDecrypt.asmx?WSDL";
         $this->liveurl = "https://ecomm.sella.it/gestpay/pagam.asp";
       }
-     
+
       // Set currency code
       $gestpay_allowed_currency_codes = array(
           'USD' => '1',
@@ -268,9 +297,9 @@ function init_gestpay_gateway() {
       $params->shopTransactionId = $order_id;
 
       /* ==========   See ADVANCED-VERSION-NOTES in the readme file   ==========
-       * 
+       *
        * ADVANCED version parameters: can be added also other informations
-       * 
+       *
         if ($this->gestpay_account_type == 'Advanced') {
         // Set country-language
         $gestpay_allowed_country_codes = array(
@@ -294,7 +323,7 @@ function init_gestpay_gateway() {
 
         // TODO: add other fields if necessary
         }
-       * 
+       *
        */
 
       // Create a SOAP client using the GestPay webservice
@@ -328,7 +357,7 @@ function init_gestpay_gateway() {
       }
 
       $xml = simplexml_load_string($objectresult->EncryptResult->any);
-      
+
       // Check if the encryption call can be accepted
       if ($xml->TransactionResult == "KO") {
         $err = __("Fatal Error: Transaction Result Error", 'woocommerce_gestpay');
@@ -350,10 +379,10 @@ function init_gestpay_gateway() {
 					<input type="submit" class="button-alt" id="submit_gestpay_payment_form" value="' . __('Pay via gestpay', 'woothemes') . '" /> <a class="button cancel" href="' . $order->get_cancel_order_url() . '">' . __('Cancel order &amp; restore cart', 'woothemes') . '</a>
 					<script type="text/javascript">
 						jQuery(function(){
-							jQuery("body").block({ 
-									message: "<img src=\"' . $woocommerce->plugin_url() . '/assets/images/ajax-loader.gif\" alt=\"Redirecting…\" style=\"float:left; margin-right: 10px;\" />' . __('Thank you for your order. We are now redirecting you to gestpay to make payment.', 'woothemes') . '", 
+							jQuery("body").block({
+									message: "<img src=\"' . $woocommerce->plugin_url() . '/assets/images/ajax-loader.gif\" alt=\"Redirecting…\" style=\"float:left; margin-right: 10px;\" />' . __('Thank you for your order. We are now redirecting you to gestpay to make payment.', 'woothemes') . '",
 									overlayCSS: {background: "#fff",opacity: 0.6},
-									css: {padding:20,textAlign:"center",color:"#555",border:"3px solid #aaa",backgroundColor:"#fff",cursor:"wait",lineHeight:"32px"} 
+									css: {padding:20,textAlign:"center",color:"#555",border:"3px solid #aaa",backgroundColor:"#fff",cursor:"wait",lineHeight:"32px"}
 								});
 							jQuery("#submit_gestpay_payment_form").click();
 						});
@@ -362,18 +391,25 @@ function init_gestpay_gateway() {
     }
 
     /**
-     * Process the payment and return the result
+     * Process the payment and return the result.
+     *
+     * @param int $order_id
+     * @return array
      */
-    function process_payment($order_id) {
-      $order = &new woocommerce_order($order_id);
+    function process_payment( $order_id ) {
+      $order = new WC_Order( $order_id );
 
       return array(
-          'result' => 'success',
-          'redirect' => add_query_arg(
-                  'order', $order->id, add_query_arg(
-                          'key', $order->order_key, get_permalink(get_option('woocommerce_pay_page_id'))
-                  )
+        'result' => 'success',
+        'redirect' => add_query_arg(
+          'order',
+          $order->id,
+          add_query_arg(
+            'key',
+            $order->order_key,
+            get_permalink( woocommerce_get_page_id( 'pay' ) )
           )
+        )
       );
     }
 
@@ -420,17 +456,17 @@ function init_gestpay_gateway() {
           $err = __("Fatal Error: Soap Client Decryption Exception", 'woocommerce_gestpay');
           $this->msg['class'] = 'woocommerce_error';
           $this->msg['message'] = $err . " [{$e->getMessage()}]";
-          echo $this->show_message("");
+          echo $this->show_message( "" );
 
-          $this->send_email_to_admin($this->msg['message']);
+          $this->send_email_to_admin( $this->msg['message'] );
 
           return false;
         }
 
-        $xml = simplexml_load_string($objectresult->DecryptResult->any);
+        $xml = simplexml_load_string( $objectresult->DecryptResult->any );
 
         $order_id = $xml->ShopTransactionID;
-        $order = new woocommerce_order((int) $order_id);
+        $order = new WC_Order( (int) $order_id );
 
         if ($xml->TransactionResult == "OK") {
           $transaction = '<a href="' . esc_url(add_query_arg('order', $order->id, get_permalink(woocommerce_get_page_id('view_order')))) .
@@ -478,8 +514,8 @@ HTML;
 
     /**
      * Send an email to the email specified in the wp settings
-     * 
-     * @param string $err 
+     *
+     * @param string $err
      */
     function send_email_to_admin($err) {
       $object = "[WOOCOMMERCE GESTPAY ERROR NOTIFICATION]";
@@ -499,8 +535,8 @@ HTML;
 
     /**
      * thankyou_page is hooked into the thanks page
-     * 
-     * @global type $woocommerce 
+     *
+     * @global type $woocommerce
      */
     function thankyou_page() {
       global $woocommerce;
@@ -525,13 +561,3 @@ HTML;
   }
 
 }
-
-/**
- * Add the gateway to WooCommerce
- * */
-function add_gestpay_gateway($methods) {
-  $methods[] = 'woocommerce_gestpay';
-  return $methods;
-}
-
-add_filter('woocommerce_payment_gateways', 'add_gestpay_gateway');
