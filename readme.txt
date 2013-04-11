@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woocommerce, credit card, gestpay, banca sella, sella.it
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 2.0
+Stable tag: 2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,6 +22,31 @@ Extends WooCommerce providing the Basic version of the GestPay (Banca Sella) red
 
 If you need also the ADVANCED version send me an email at **info@mauromascia.com**
 
+= Notes for italian users =
+
+Visto che il plugin verrà utilizzato soltanto dagli utenti italiani, inserisco qui di seguito alcune note in lingua italiana.
+
+Il plugin è compatibile con l'attuale versione 2.0 di WooCommerce ma se alcuni di voi usassero ancora la vecchia versione, la 1.6.1, potete scaricare la versione precedente di questo plugin seguendo al link: [WC GestPay 1.0.1](http://downloads.wordpress.org/plugin/woocommerce-gestpay.1.0.1.zip "WC GestPay 1.0.1")
+
+= Gestione degli errori =
+
+**Errore 1131**
+Dipende quasi sicuramente dal fatto che l'indirizzo IP inserito nella pagina di amministrazione di GestPay non corrisponde a quello reale del server.
+Per risolvere il problema dovreste contattare il vostro fornitore di hosting richiedendo il reale (o i reali) IP da utilizzare.
+Per esempio nel caso di Aruba gli indirizzi IP da utilizzare dovrebbero essere i seguenti:
+* 62.149.140.*
+* 62.149.141.*
+* 62.149.142.*
+* 62.149.143.*
+
+con l'asterisco finale.
+
+**Errore 1142**
+Dipende quasi sicuramente da uno seguenti fattori:
+* lo shop login non è valorizzato correttamente
+* si sta usando lo shop login di test nell'ambiente reale o viceversa: "Process URL" non deve essere selezionato nell'ambiente reale!
+
+In entrambi i casi verificare che NON si sta usando la versione 1.0 di questo plugin perché conteneva un errore nell'indirizzo da utilizzare nell'ambiente reale.
 
 == Installation ==
 

@@ -3,7 +3,7 @@
   Plugin Name: WooCommerce GestPay Redirect Gateway (Basic version)
   Plugin URI: http://www.mauromascia.com/portfolio/wordpress-woocommerce-gestpay
   Description: Extends WooCommerce providing the Basic version of the GestPay (Banca Sella) redirect gateway for WooCommerce.
-  Version: 2.0
+  Version: 2.1
   Author: Mauro Mascia (baba_mmx)
   Author URI: http://www.mauromascia.com
   License: GPLv2
