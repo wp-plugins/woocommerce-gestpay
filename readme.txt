@@ -14,7 +14,7 @@ Extends WooCommerce providing a payment gateway for the Starter (ex-Basic) versi
 
 Extends WooCommerce providing a payment gateway for the Starter (ex-Basic) version of the GestPay (Banca Sella) service.
 
-**This plugin only works with the START (ex-BASIC) version of the GestPay service.**
+**This plugin only works with the Starte (ex-Basic) version of the GestPay service.**
 
 **This plugin is intended only for the italian audience and for that the following instructions are in italian.**
 
