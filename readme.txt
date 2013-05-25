@@ -84,7 +84,10 @@ Send me an email at **info@mauromascia.com** and we'll talk about it.
 
 == Changelog ==
 
-= 2.2 =
+= 2.2.1 =
+Fixed SVN commit
+
+= 2.2.0 =
 * Global refactoring of the code with better handling of options and translations
 * Better back office presentation
 * Solved compatibility issues between old and new WooCommerce versions
