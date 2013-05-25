@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,7 +21,7 @@ Extends WooCommerce providing a payment gateway for the Starter (ex-Basic) versi
 = Note sulle versioni =
 
 La versione [Starter](https://www.gestpay.it/gestpay/offerta/starter.jsp "GestPay Starter") (chiamata precedentemente Basic) consente di effettuare i pagamenti con le più diffuse carte di credito e tramite PayPal.
-A differenza della versione Professional non consente di:
+A differenza della versione Professional **non consente di**:
 
 * Gestire pagamenti in valuta diversa da euro
 * Pianificare invii automatici dei report via mail
@@ -35,6 +35,7 @@ Per maggiori informazioni ci possiamo sentire all'indirizzo: **info@mauromascia.
 
 
 = Gestione degli errori =
+
 
 **Errore 1131**
 
