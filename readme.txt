@@ -28,7 +28,7 @@ A differenza della versione Professional **non consente di**:
 * Personalizzare i filtri per le estrazioni dei dati sui pagamenti (Opzione disponibile solo nel backoffice di Sella)
 * Personalizzare automaticamente la lingua sulla pagina di pagamento
 
-La versione Professional è acquistabile sul mio sito [www.mauromascia.com](http://www.mauromascia.com/shop/product/woocommerce-gestpay-professional-banca-sella "GestPay Professional su www.mauromascia.com") e consentirà di specificare alcuni parametri tra cui la lingua del back office di pagamento di GestPay.
+La versione Professional è [acquistabile sul mio sito](http://www.mauromascia.com/shop/product/woocommerce-gestpay-professional-banca-sella "GestPay Professional su mauromascia.com") e consentirà di specificare alcuni parametri tra cui la lingua del back office di pagamento di GestPay.
 Un'altra funzionalità disponibile solo nella versione Pro è quella di specificare le icone relative alle carte effettivamente abilitate.
 
 Per maggiori informazioni contattemi all'indirizzo: **info@mauromascia.com**
