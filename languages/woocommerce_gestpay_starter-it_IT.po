@@ -1,0 +1,174 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Woocommerce GestPay\n"
+"POT-Creation-Date: 2012-09-28 17:17+0100\n"
+"PO-Revision-Date: 2013-05-25 17:17+0100\n"
+"Last-Translator: Mauro Mascia <info@masciamauro.com>\n"
+"Language-Team: Mauro Mascia <masciamauro@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-Language: Italian\n"
+"X-Poedit-Country: ITALY\n"
+
+msgid "Enable/Disable:"
+msgstr "Abilita/Disabilita:"
+
+msgid "Enable GestPay Starter."
+msgstr "Abilita GestPay Starter."
+
+msgid "Title:"
+msgstr "Titolo:"
+
+msgid "The title which the user sees during checkout."
+msgstr "Il titolo che l'utente visualizza durante il checkout."
+
+msgid "Banca Sella (GestPay Starter)"
+msgstr ""
+
+msgid "Description:"
+msgstr "Descrizione:"
+
+msgid "This controls the description which the user sees during checkout."
+msgstr "Questo controlla la descrizione che l'utente visualizza durante il checkout."
+
+msgid "Tip: Use the quicktags (%s) with qTranslate."
+msgstr "Suggerimento: Usa i quicktags (%s) con qTranslate."
+
+msgid "Pay securely by Credit or Debit card through GestPay's Secure Servers."
+msgstr "Effettua un pagamento tramite carta di credito o di debito, attraverso i server sicuri di GestPay."
+
+msgid "Please enter your shopLogin as provided by GestPay."
+msgstr "Perfavore, inserisci il tuo shopLogin fornito da GestPay"
+
+msgid "GestPay Pro Parameters"
+msgstr "Parametri di GestPay Pro"
+
+msgid "Enable the buyer e-mail parameter"
+msgstr "Abilita il parametro relativo all'email dell'acquirente"
+
+msgid "Enable the buyer name parameter"
+msgstr "Abilita il parametro relativo al nome dell'acquirente"
+
+msgid "Enable the language parameter"
+msgstr "Abilita il parametro lingua"
+
+msgid "Allows to set the language of the GestPay payment page automatically (with qtranslate or WPML)"
+msgstr "Permette di impostare automaticamente la lingua della pagina di pagamento di GestPay (con qtranslate o WPML)"
+
+msgid "Enter your custom information as parameter=value, one for each row. The space and the following characters are not allowed:"
+msgstr "Inserisci le tue informazioni personalizzate come parametro=valore, uno per ogni riga. Lo spazio e i seguenti caratteri non sono ammessi:"
+
+msgid "Card Icons"
+msgstr "Icone delle carte di credito"
+
+msgid "Select the accepted cards to show them as icon"
+msgstr "Seleziona le carte di credito abilitate per mostrarle come icona"
+
+msgid "Gateway Testing"
+msgstr "Test del Gateway"
+
+msgid "Experimental features"
+msgstr "Funzionalità sperimentali"
+
+msgid "Force Re-Encrypt:"
+msgstr "Forza ri-cifratura:"
+
+msgid "Forces the re-encryption process."
+msgstr "Forza il processo di ri-cifratura"
+
+msgid "In certain cases can be useful to force the re-encryption of the string sent to the GestPay server. <strong>Warning: this is an experimental feature! Enable this feature only if you know what you are doing.</strong>"
+msgstr "In alcuni casi può essere utile per forzare la ri-cifratura della stringa inviata al server GestPay. <strong>Attenzione: questa è una funzione sperimentale! Attivare questa funzione solo se si sa cosa si sta facendo.</strong>"
+
+msgid "Sandbox/test mode:"
+msgstr "Modalità sandbox/test:"
+
+msgid "Enable sandbox mode"
+msgstr "Abilita la modalità sandbox"
+
+msgid "If checked (default), the checkout will be processed with the test URL, else with the real one."
+msgstr "Se selezionato (default), il checkout verrà processato con l'indirizzo di test, altrimenti con quello reale."
+
+msgid "Enable logging events"
+msgstr "Abilita la registrazione degli eventi"
+
+msgid "Log GestPay Starter events inside the woocommerce/logs/%s.txt file"
+msgstr "Registra gli eventi di GestPay Starter sul file woocommerce/logs/%s.txt"
+
+msgid "Enable emails for logging errors"
+msgstr "Abilita le email per l'avviso degli errori"
+
+msgid "Log GestPay Starter errors using the email"
+msgstr "Registra gli errori di GestPay Starter usando l'email"
+
+msgid "Accept payments from Credit/Debit cards through the GestPay Payment Gateway. After the customer enters his credit card informations, will be redirected to a secure GestPay server's hosted page to finish the transaction."
+msgstr "Accetta pagamenti da carte di credito/debito attraverso il gateway di pagamento GestPay. Dopo che il cliente inserisce le informazioni della sua carta di credito, verrà reindirizzato alla pagina ospitata sui server sicuri di GestPay per completare la transazione."
+
+msgid "In your GestPay account, you have to set the response URL to the one of the view order, for example on: http://yoursitetname/my-account/view-order/. In this way the customer can know the transaction results."
+msgstr "Nel tuo account GestPay, è necessario impostare l'URL di risposta a quella dell'ordine vista, ad esempio su:<br> http://yoursitetname/my-account/view-order/. In questo modo il cliente può conoscere i risultati delle transazioni."
+
+msgid "The credit card informations will not be stored anywhere in this system, but they will be inserted into the secure servers of GestPay."
+msgstr "Le informazioni delle carte di credito non verranno memorizzate da nessuna parte in questo sistema, ma verranno inserite nei server sicuri di GestPay."
+
+msgid "To get <strong>GestPay Professional</strong> please visit %s or send me an email at %s"
+msgstr "Per ottenere <strong>GestPay Professional</strong> visita %s oppure inviami un'email a %s"
+
+msgid "Crypted string [%s]: %s"
+msgstr "Stringa cifrata [%s]: %s"
+
+msgid "You are forcing the re-encryption process: this may cause multiple calls to the GestPay webservice."
+msgstr "Stai forzando il processo di ri-cifratura: questo può causare chiamate multiple verso il webservice di GestPay."
+
+msgid "If you have come to this page it is likely that there has been an error in our system or in the GestPay payment system. In any case, an automated email has been sent to the system administrator, who will verify that error as soon as possible. To place your purchase you can try again later. We apologize for the inconvenience."
+msgstr "Se sei capitato in questa pagina è probabile che ci sia stato un errore nel nostro sistema o nel sistema di pagamento GestPay. In ogni caso, una email automatica è stata inviata all'amministratore di sistema, che il prima possibile verificherà tale errore. Per concludere il tuo acquisto puoi riprovare più tardi. Ci scusiamo per l'inconveniente."
+
+msgid "Fatal Error: Check the GestPay configuration."
+msgstr "Errore Fatale: Verifica la configurazione di GestPay"
+
+msgid "Transaction language is %s"
+msgstr "La lingua della transazione è %s"
+
+msgid "Retrieving args for the order no: %s"
+msgstr "Sto recuperando gli argomenti per l'ordine n.: %s"
+
+msgid "Checking GestPay response..."
+msgstr "Sto verificando la risposta di GestPay..."
+
+msgid "This is the second call: do nothing."
+msgstr "Questa è la seconda chiamata: non fare nulla."
+
+msgid "Generating the gestpay redirect form..."
+msgstr "Sto generando il form di redirect di gestpay..."
+
+msgid "The b parameter is invalid."
+msgstr "Il parametro b non è valido."
+
+msgid "Fatal Error: Soap Client Request Exception with error %s"
+msgstr "Errore Fatale: Eccezione nella richiesta del client Soap con errore %s"
+
+msgid "Fatal Error: Soap Client Encryption Exception with error %s"
+msgstr "Errore Fatale: Eccezione nella criptazione con il client Soap con errore %s"
+
+msgid "Fatal Error: Soap Client Response Exception with error %s"
+msgstr "Errore Fatale: Eccezione nella risposta del client Soap con errore %s"
+
+msgid "Fatal Error: Soap Client Decryption Exception with error %s"
+msgstr "Errore Fatale: Eccezione nella decriptazione con il client Soap con errore %s"
+
+msgid "Transaction failed with error"
+msgstr "La transazione è fallita con errore"
+
+msgid "Transaction for order %s failed with error %s"
+msgstr "La transazione per l'ordine %s è fallita con errore %s"
+
+msgid "Thank you for shopping with us. Your transaction %s has been processed correctly. We will be shipping your order to you soon."
+msgstr "Grazie per aver acquistato da noi. Il tuo ordine %s è stato correttamente elaborato. Presto spediremo il tuo ordine."
+
+msgid "Transaction for order %s has been completed successfully."
+msgstr "La transazione per l'ordine %s è stata completata con successo."
+
+msgid "Transaction for order %s has been already completed."
+msgstr "La transazione per l'ordine %s è già stata completata."
+
