@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 2.2.1
+Stable tag: 2.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,14 +24,14 @@ La versione [Starter](https://www.gestpay.it/gestpay/offerta/starter.jsp "GestPa
 A differenza della versione Professional **non consente di**:
 
 * Gestire pagamenti in valuta diversa da euro
-* Pianificare invii automatici dei report via mail
-* Personalizzare i filtri per le estrazioni dei dati sui pagamenti
+* Pianificare invii automatici dei report via mail (Opzione disponibile solo nel backoffice di Sella)
+* Personalizzare i filtri per le estrazioni dei dati sui pagamenti (Opzione disponibile solo nel backoffice di Sella)
 * Personalizzare automaticamente la lingua sulla pagina di pagamento
 
-La versione Professional sarà acquistabile a breve sul mio sito [www.mauromascia.com](https://www.mauromascia.com "www.mauromascia.com") e consentirà di specificare alcuni parametri tra cui la lingua del back office di pagamento di GestPay.
+La versione Professional è acquistabile sul mio sito [www.mauromascia.com](http://www.mauromascia.com/shop/product/woocommerce-gestpay-professional-banca-sella "GestPay Professional su www.mauromascia.com") e consentirà di specificare alcuni parametri tra cui la lingua del back office di pagamento di GestPay.
 Un'altra funzionalità disponibile solo nella versione Pro è quella di specificare le icone relative alle carte effettivamente abilitate.
 
-Per maggiori informazioni ci possiamo sentire all'indirizzo: **info@mauromascia.com**
+Per maggiori informazioni contattemi all'indirizzo: **info@mauromascia.com**
 
 
 = Gestione degli errori =
@@ -83,6 +83,9 @@ Send me an email at **info@mauromascia.com** and we'll talk about it.
 3. Configuration panel
 
 == Changelog ==
+
+= 2.2.2 =
+* Updated Readme with the right link to the Pro version
 
 = 2.2.1 =
 Fixed SVN commit
