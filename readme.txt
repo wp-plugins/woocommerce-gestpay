@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 2.2.2
+Stable tag: 2.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,6 +35,14 @@ Per maggiori informazioni contattemi all'indirizzo: **info@mauromascia.com**
 
 
 = Gestione degli errori =
+
+
+**Non viene raggiunta la pagina di pagamento di Sella**
+
+Il problema è probabilmente imputabile all'assenza della librearia SOAP Client di PHP sul server web.
+Se su www.tuosito.it/wp-admin/admin.php?page=woocommerce_status è presente il messaggio d'errore:
+`SOAP Client: Il server non ha la classe SOAP Client abilitata - alcuni plugin di gateway che utilizzano SOAP potrebbero non funzionare come previsto.`
+è necessario installare/abilitare la librera SOAP Client di PHP o contattare il proprio hosting provider e richiedere l'abilitazione.
 
 
 **Errore 1131**
@@ -83,6 +91,9 @@ Send me an email at **info@mauromascia.com** and we'll talk about it.
 3. Configuration panel
 
 == Changelog ==
+
+= 2.2.3 =
+* Added error message if SOAP client is not available
 
 = 2.2.2 =
 * Updated Readme with the right link to the Pro version

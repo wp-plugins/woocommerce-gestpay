@@ -3,7 +3,7 @@
   Plugin Name: WooCommerce GestPay Starter
   Plugin URI: http://wordpress.org/plugins/woocommerce-gestpay/
   Description: Extends WooCommerce providing a payment gateway for the Starter (ex-Basic) version of the GestPay (Banca Sella) service.
-  Version: 2.2.2
+  Version: 2.2.3
   Author: Mauro Mascia (baba_mmx)
   Author URI: http://www.mauromascia.com
   License: GPLv2
@@ -31,6 +31,11 @@ function init_gestpay_starter_gateway() {
 
   if ( !class_exists( 'WC_Payment_Gateways' ) )
     return;
+
+  if ( !extension_loaded( 'soap' ) ) {
+    echo '<div id="message" class="error"><p>ERRORE: Per poter utilizzare GESTPAY STARTER la libreria SOAP client di PHP deve essere abilitata!</p></div>';
+    return;
+  }
 
   /**
    * Add the gateway to WooCommerce.
