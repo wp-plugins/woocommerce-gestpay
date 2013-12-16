@@ -45,11 +45,23 @@ Se su www.tuosito.it/wp-admin/admin.php?page=woocommerce_status è presente il m
 è necessario installare/abilitare la librera SOAP Client di PHP o contattare il proprio hosting provider e richiedere l'abilitazione.
 
 
-**Errore 1131**
+**Errori 1131 o 1142**
 
-Dipende quasi sicuramente dal fatto che l'indirizzo IP inserito nella pagina di amministrazione di GestPay non corrisponde a quello reale del server.
-Per risolvere il problema dovreste contattare il vostro fornitore di hosting richiedendo il reale (o i reali) IP da utilizzare.
-Per esempio nel caso di Aruba gli indirizzi IP da utilizzare dovrebbero essere i seguenti:
+Questo tipo di errori può scaturire da uno dei seguenti casi:
+
+* non si sta usando l'ultima versione di questo plugin
+
+* lo shop login non è valorizzato correttamente
+
+* si sta usando lo shop login di test nell'ambiente reale o viceversa: "Sandbox/test mode" non deve essere selezionato nell'ambiente reale!
+
+* l'indirizzo IP inserito nella pagina di amministrazione di GestPay non corrisponde a quello ricevuto dal sistema di Banca Sella: questo accade perché il vostro provider di hosting assegna un particolare indirizzo IP al vostro sito web ma il server su cui viene ospitato ha un differente indirizzo IP, ed è questo l'indirizzo IP che interessa a Sella.
+
+In questi casi non potrete avere la sicurezza che il sito venga ospitato sempre sullo stesso server, perché lo potrebbero spostare su un server diverso a seconda delle necessità (carico, guasto, ecc): per questo motivo non è detto che vi basti utilizzare un solo indirizzo IP del server ma potrebbe servirvi uno o più range di IP.
+
+In linea generale, per risolvere il problema dovreste contattare il vostro fornitore di hosting richiedendo il reale (o i reali) IP da utilizzare. Questa operazione potrebbe essere difficile perché non è detto che siano tenuti a darvi tali informazioni. 
+
+Nel caso di Aruba, per esempio, gli indirizzi IP da utilizzare dovrebbero essere i seguenti:
 
 * 62.149.140.*
 * 62.149.141.*
@@ -58,16 +70,20 @@ Per esempio nel caso di Aruba gli indirizzi IP da utilizzare dovrebbero essere i
 
 dove, l'asterisco finale indica tutti gli indirizzi IP in quel gruppo di indirizzi.
 
+Ultimamente ad un utente (Angelo, che ringrazio) è capitato di dover utilizzare anche i seguenti indirizzi IP di Aruba:
 
-**Errore 1142**
+* 62.149.144.*
+* 62.149.145.*
+* 62.149.146.*
+* 62.149.147.*
+* 62.149.148.*
+* 62.149.149.*
 
-Dipende quasi sicuramente da uno seguenti fattori:
+ma non è detto che rimangano sempre e solo questi.
 
-* lo shop login non è valorizzato correttamente
-* si sta usando lo shop login di test nell'ambiente reale o viceversa: "Sandbox/test mode" non deve essere selezionato nell'ambiente reale!
+Purtroppo da parte mia non c'è molto da fare, quindi vi consiglio di prendere contatti sia con gli operatori di Banca Sella, sia con il vostro provider di hosting.
 
-In entrambi i casi verificare che NON si sta usando precedenti versioni di questo plugin.
-La versione attuale è stata completamente rivista e adattata per funzionare sia con la versione 1.6 che la 2.x di WooCommerce.
+
 
 == Installation ==
 
