@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 2.2.3
+Stable tag: 2.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,6 +107,9 @@ Send me an email at **info@mauromascia.com** and we'll talk about it.
 3. Configuration panel
 
 == Changelog ==
+
+= 2.2.4 =
+* Moved translation string back to the main class for a better WC 2.1 compatibility.
 
 = 2.2.3 =
 * Added error message if SOAP client is not available
