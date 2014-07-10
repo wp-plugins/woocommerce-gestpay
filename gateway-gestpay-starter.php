@@ -3,13 +3,13 @@
   Plugin Name: WooCommerce GestPay Starter
   Plugin URI: http://wordpress.org/plugins/woocommerce-gestpay/
   Description: Extends WooCommerce providing a payment gateway for the Starter (ex-Basic) version of the GestPay (Banca Sella) service.
-  Version: 2.2.4
+  Version: 20140710
   Author: Mauro Mascia (baba_mmx)
   Author URI: http://www.mauromascia.com
   License: GPLv2
   Support: info@mauromascia.com
 
-  Copyright 2013  Mauro Mascia (info@mauromascia.com)
+  Copyright © 2013,2014 Mauro Mascia
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License, version 2, as
@@ -29,10 +29,12 @@ add_action( 'plugins_loaded', 'init_gestpay_starter_gateway' );
 
 function init_gestpay_starter_gateway() {
 
-  if ( !class_exists( 'WC_Payment_Gateways' ) )
+  if ( ! class_exists( 'WC_Payment_Gateways' ) ) {
+    // No error messages, do not bore the user.
     return;
+  }
 
-  if ( !extension_loaded( 'soap' ) ) {
+  if ( ! extension_loaded( 'soap' ) ) {
     echo '<div id="message" class="error"><p>ERRORE: Per poter utilizzare GESTPAY STARTER la libreria SOAP client di PHP deve essere abilitata!</p></div>';
     return;
   }
@@ -54,7 +56,7 @@ function init_gestpay_starter_gateway() {
 
     public function __construct() {
 
-      // 1) Set up localisation
+      // Set up localisation
       load_plugin_textdomain( 'woocommerce_gestpay_starter', false, dirname( plugin_basename( __FILE__ ) ) . "/languages" );
 
       global $woocommerce;
@@ -65,19 +67,20 @@ function init_gestpay_starter_gateway() {
       $this->icon = WP_PLUGIN_URL . "/" . plugin_basename( dirname (__FILE__ ) ) . '/images/gestpay-cards.jpg';
       $this->logfile = 'gestpay-starter';
 
-      // 2) Load the strings used in this plugin
-      $this->strings = $this->init_strings();
+      // Load some strings used in this plugin
+      $this->init_strings();
 
-      // 3) Load the form fields.
+      // Load form fields.
       $this->init_form_fields();
 
-      // 4) Load the settings.
+      // Load settings.
       $this->init_settings();
 
-      // 5) Define user set variables
+      // Define user set variables
       $this->title = $this->settings['title'];
       $this->description = $this->settings['description'];
       $this->shopLogin = $this->settings['shopLogin'];
+      $this->show_message_on_end_page = $this->settings['show_message_on_end_page'] == "yes" ? true : false;
       $this->gestpay_processUrl = $this->settings['gestpay_processUrl'] == "yes" ? true : false;
       $this->transactionDate = date( 'Y-m-d H:i:s' );
       $this->force_recrypt = $this->settings['force_recrypt'] == "yes" ? true : false;
@@ -108,13 +111,18 @@ function init_gestpay_starter_gateway() {
 
       // Actions
       add_action( 'woocommerce_receipt_' . $this->id, array( &$this, 'receipt_page' ) );
-      add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
 
+      // Questa genera una doppia chiamata alla pagina di ordine ricevuto.
+      add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
 
       if ( version_compare( WOOCOMMERCE_VERSION, '2.0.0', '>=' ) ) {
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
       }
       else {
+        if ( $this->debug ) {
+          $this->log->add( $this->logfile, "[INFO]: check_wc_gestpay_starter_response on old WooCommerce..." );
+        }
+
         add_action( 'init', array( &$this, 'check_wc_gestpay_starter_response' ) );
         add_action( 'woocommerce_update_options_payment_gateways', array( $this, 'process_admin_options' ) );
       }
@@ -126,22 +134,23 @@ function init_gestpay_starter_gateway() {
     function init_form_fields() {
       $this->form_fields = array(
         'enabled' => array(
-          'title' => $this->strings['field_enabled']['t'],
+          'title' => __( 'Enable/Disable:', 'woocommerce_gestpay_starter' ),
           'type' => 'checkbox',
-          'label' => $this->strings['field_enabled']['l'],
+          'label' => __( 'Enable GestPay Starter.', 'woocommerce_gestpay_starter' ),
           'default' => 'yes'
         ),
         'title' => array(
-          'title' => $this->strings['field_title']['t'],
+          'title' => __( 'Title:', 'woocommerce_gestpay_starter' ),
           'type' => 'text',
-          'description' => $this->strings['field_title']['d'],
-          'default' => $this->strings['field_title']['def']
+          'description' => __( 'The title which the user sees during checkout.', 'woocommerce_gestpay_starter' ),
+          'default' => "Banca Sella (GestPay Starter)"
         ),
         'description' => array(
-          'title' => $this->strings['field_description']['t'],
+          'title' => __( 'Description:', 'woocommerce_gestpay_starter' ),
           'type' => 'textarea',
-          'description' => $this->strings['field_description']['d'],
-          'default' => $this->strings['field_description']['def']
+          'description' => __( 'This controls the description which the user sees during checkout.', 'woocommerce_gestpay_starter' ) . '<br />' .
+             sprintf( __( 'Tip: Use the quicktags (%s) with qTranslate.', 'woocommerce_gestpay_starter' ), "[:it]Italia[:en]English[:de]Deutsch" ),
+          'default' => "Paga in tutta sicurezza con Banca Sella"
         ),
 
         // -- SHOP LOGIN
@@ -149,14 +158,21 @@ function init_gestpay_starter_gateway() {
         'shopLogin' => array(
           'title' => 'GestPay Shop Login:',
           'type' => 'text',
-          'description' => $this->strings['field_shoplogin']['d'],
+          'description' => __( 'Please enter your shopLogin as provided by GestPay.', 'woocommerce_gestpay_starter' ),
           'default' => ''
+        ),
+
+        'show_message_on_end_page' => array(
+          'title' => "Mostra messaggio esito transazione",
+          'type' => 'checkbox',
+          'description' => "Se selezionato mostra un messaggio positivo o negativo, a seconda dell'esito della transazione, nelle pagine di questo sito che sono state indicate nelle URL di risposta del backoffice di Gestpay",
+          'default' => 'yes'
         ),
 
         // -- GESTPAY PRO PARAMETERS
 
         'parameters' => array(
-          'title' => $this->strings['field_parameters']['t'],
+          'title' => __( 'GestPay Pro Parameters', 'woocommerce_gestpay_starter' ),
           'type' => 'title',
           'description' => '',
           'class' => 'pro-disable-section',
@@ -164,29 +180,29 @@ function init_gestpay_starter_gateway() {
         'param_buyer_email' => array(
           'title' => 'Buyer E-mail:',
           'type' => 'checkbox',
-          'label' => $this->strings['field_buyer_email']['l'],
+          'label' => __( 'Enable the buyer e-mail parameter', 'woocommerce_gestpay_starter' ),
           'default' => 'no',
           'class' => 'pro-disable-element'
         ),
         'param_buyer_name' => array(
           'title' => 'Buyer Name:',
           'type' => 'checkbox',
-          'label' => $this->strings['field_buyer_name']['l'],
+          'label' => __( 'Enable the buyer name parameter', 'woocommerce_gestpay_starter' ),
           'default' => 'no',
           'class' => 'pro-disable-element'
         ),
         'param_language' => array(
           'title' => 'Language:',
           'type' => 'checkbox',
-          'label' => $this->strings['field_language']['l'],
+          'label' => __( 'Enable the language parameter', 'woocommerce_gestpay_starter' ),
           'default' => 'no',
-          'description' => $this->strings['field_language']['d'],
+          'description' => __( 'Allows to set the language of the GestPay payment page automatically (with qtranslate or WPML)', 'woocommerce_gestpay_starter' ),
           'class' => 'pro-disable-element'
         ),
         'param_custominfo' => array(
           'title' => 'Custom Info:',
           'type' => 'textarea',
-          'description' => $this->strings['field_custominfo']['d'],
+          'description' => __( 'Enter your custom information as parameter=value, one for each row. The space and the following characters are not allowed:', 'woocommerce_gestpay_starter' ) . " & § ( ) * < > , ; : *P1* / /* [ ] ? = %",
           'class' => 'pro-disable-element',
           'default' => '',
         ),
@@ -194,9 +210,9 @@ function init_gestpay_starter_gateway() {
         // -- ICONS
 
         'cards' => array(
-          'title' => $this->strings['field_cards']['t'],
+          'title' => __( 'Card Icons', 'woocommerce_gestpay_starter' ),
           'type' => 'title',
-          'description' => $this->strings['field_cards']['d'],
+          'description' => __( 'Select the accepted cards to show them as icon', 'woocommerce_gestpay_starter' ),
           'class' => 'pro-disable-section'
         ),
         'card_visa' => array(
@@ -252,45 +268,45 @@ function init_gestpay_starter_gateway() {
         // -- TESTING
 
         'testing' => array(
-          'title' => $this->strings['field_testing']['t'],
+          'title' => __( 'Gateway Testing', 'woocommerce_gestpay_starter' ),
           'type' => 'title',
           'description' => '',
         ),
         'gestpay_processUrl' => array(
-          'title' => $this->strings['field_processurl']['t'],
+          'title' => __( 'Sandbox/test mode:', 'woocommerce_gestpay_starter' ),
           'type' => 'checkbox',
-          'label' => $this->strings['field_processurl']['l'],
-          'description' => $this->strings['field_processurl']['d'],
+          'label' => __( 'Enable sandbox mode', 'woocommerce_gestpay_starter' ),
+          'description' => __( 'If checked (default), the checkout will be processed with the test URL, else with the real one.', 'woocommerce_gestpay_starter' ),
           'default' => 'yes'
         ),
         'send_email_on_error' => array(
           'title' => 'Debug email:',
           'type' => 'checkbox',
-          'label' => $this->strings['field_emaildebug']['l'],
+          'label' => __( 'Enable emails for logging errors', 'woocommerce_gestpay_starter' ),
           'default' => 'no',
-          'description' => $this->strings['field_emaildebug']['d'],
+          'description' => __( 'Log GestPay Starter errors using the email', 'woocommerce_gestpay_starter' ),
         ),
         'debug' => array(
           'title' => 'Debug Log:',
           'type' => 'checkbox',
-          'label' => $this->strings['field_debug']['l'],
+          'label' => __( 'Enable logging events', 'woocommerce_gestpay_starter' ),
           'default' => 'no',
-          'description' => $this->strings['field_debug']['d'],
+          'description' => sprintf( __( 'Log GestPay Starter events inside the woocommerce/logs/%s.txt file', 'woocommerce_gestpay_starter' ), version_compare( WOOCOMMERCE_VERSION, '2.0.0', '>=' ) ? $this->logfile . "-" . sanitize_file_name( wp_hash( $this->logfile ) ) : $this->logfile ),
         ),
 
         // -- EXPERIMENTAL
 
         'experimental' => array(
-          'title' => $this->strings['field_experimental']['t'],
+          'title' => __( 'Experimental features', 'woocommerce_gestpay_starter' ),
           'type' => 'title',
           'description' => '',
         ),
         'force_recrypt' => array(
-          'title' => $this->strings['field_force_recrypt']['t'],
+          'title' => __( 'Force Re-Encrypt:', 'woocommerce_gestpay_starter' ),
           'type' => 'checkbox',
-          'label' => $this->strings['field_force_recrypt']['l'],
+          'label' => __( 'Forces the re-encryption process.', 'woocommerce_gestpay_starter' ),
           'default' => 'no',
-          'description' => $this->strings['field_force_recrypt']['d'],
+          'description' => __( 'In certain cases can be useful to force the re-encryption of the string sent to the GestPay server. <strong>Warning: this is an experimental feature! Enable this feature only if you know what you are doing.</strong>', 'woocommerce_gestpay_starter' ),
         ),
 
       );
@@ -300,69 +316,7 @@ function init_gestpay_starter_gateway() {
      * Initialise Gateway Strings
      */
     function init_strings() {
-      return array(
-        'field_enabled' => array(
-          't' => __( 'Enable/Disable:', 'woocommerce_gestpay_starter' ),
-          'l' => __( 'Enable GestPay Starter.', 'woocommerce_gestpay_starter' )
-        ),
-        'field_title' => array(
-          't' => __( 'Title:', 'woocommerce_gestpay_starter' ),
-          'd' => __( 'The title which the user sees during checkout.', 'woocommerce_gestpay_starter' ),
-          'def' => "Banca Sella (GestPay Starter)"
-        ),
-        'field_description' => array(
-          't' => __( 'Description:', 'woocommerce_gestpay_starter' ),
-          'd' => __( 'This controls the description which the user sees during checkout.', 'woocommerce_gestpay_starter' ) . '<br />' .
-             sprintf( __( 'Tip: Use the quicktags (%s) with qTranslate.', 'woocommerce_gestpay_starter' ), "[:it]Italia[:en]English[:de]Deutsch" ),
-          'def' => "Pay securely by Credit or Debit card through GestPay's Secure Servers."
-        ),
-        'field_shoplogin' => array(
-          'd' => __( 'Please enter your shopLogin as provided by GestPay.', 'woocommerce_gestpay_starter' ),
-        ),
-        'field_parameters' => array(
-          't' => __( 'GestPay Pro Parameters', 'woocommerce_gestpay_starter' ),
-        ),
-        'field_buyer_email' => array(
-          'l' => __( 'Enable the buyer e-mail parameter', 'woocommerce_gestpay_starter' ),
-        ),
-        'field_buyer_name' => array(
-          'l' => __( 'Enable the buyer name parameter', 'woocommerce_gestpay_starter' ),
-        ),
-        'field_language' => array(
-          'l' => __( 'Enable the language parameter', 'woocommerce_gestpay_starter' ),
-          'd' => __( 'Allows to set the language of the GestPay payment page automatically (with qtranslate or WPML)', 'woocommerce_gestpay_starter' ),
-        ),
-        'field_custominfo' => array(
-          'd' => __( 'Enter your custom information as parameter=value, one for each row. The space and the following characters are not allowed:', 'woocommerce_gestpay_starter' ) . " & § ( ) * < > , ; : *P1* / /* [ ] ? = %",
-        ),
-        'field_cards' => array(
-          't' => __( 'Card Icons', 'woocommerce_gestpay_starter' ),
-          'd' => __( 'Select the accepted cards to show them as icon', 'woocommerce_gestpay_starter' ),
-        ),
-        'field_testing' => array(
-          't' => __( 'Gateway Testing', 'woocommerce_gestpay_starter' ),
-        ),
-        'field_processurl' => array(
-          't' => __( 'Sandbox/test mode:', 'woocommerce_gestpay_starter' ),
-          'l' => __( 'Enable sandbox mode', 'woocommerce_gestpay_starter' ),
-          'd' => __( 'If checked (default), the checkout will be processed with the test URL, else with the real one.', 'woocommerce_gestpay_starter' ),
-        ),
-        'field_debug' => array(
-          'l' => __( 'Enable logging events', 'woocommerce_gestpay_starter' ),
-          'd' => sprintf( __( 'Log GestPay Starter events inside the woocommerce/logs/%s.txt file', 'woocommerce_gestpay_starter' ), version_compare( WOOCOMMERCE_VERSION, '2.0.0', '>=' ) ? $this->logfile . "-" . sanitize_file_name( wp_hash( $this->logfile ) ) : $this->logfile ),
-        ),
-        'field_emaildebug' => array(
-          'l' => __( 'Enable emails for logging errors', 'woocommerce_gestpay_starter' ),
-          'd' => __( 'Log GestPay Starter errors using the email', 'woocommerce_gestpay_starter' ),
-        ),
-        'field_experimental' => array(
-          't' => __( 'Experimental features', 'woocommerce_gestpay_starter' ),
-        ),
-        'field_force_recrypt' => array(
-          't' => __( 'Force Re-Encrypt:', 'woocommerce_gestpay_starter' ),
-          'l' => __( 'Forces the re-encryption process.', 'woocommerce_gestpay_starter' ),
-          'd' => __( 'In certain cases can be useful to force the re-encryption of the string sent to the GestPay server. <strong>Warning: this is an experimental feature! Enable this feature only if you know what you are doing.</strong>', 'woocommerce_gestpay_starter' ),
-        ),
+      $this->strings = array(
         'admin_options' => array(
           __( "Accept payments from Credit/Debit cards through the GestPay Payment Gateway. After the customer enters his credit card informations, will be redirected to a secure GestPay server's hosted page to finish the transaction.", 'woocommerce_gestpay_starter' ),
           __( 'In your GestPay account, you have to set the response URL to the one of the view order, for example on: http://yoursitetname/my-account/view-order/. In this way the customer can know the transaction results.', 'woocommerce_gestpay_starter' ),
@@ -451,8 +405,9 @@ function init_gestpay_starter_gateway() {
      * Process the payment and return the result.
      */
     function process_payment( $order_id ) {
-      if ( $this->debug )
-        $this->log->add( $this->logfile, "[INFO]: " . "Processing payment..." );
+      if ( $this->debug ) {
+        $this->log->add( $this->logfile, "[INFO]: Processing payment..." );
+      }
 
       $order = new WC_Order( $order_id );
 
@@ -587,7 +542,7 @@ function init_gestpay_starter_gateway() {
           $this->log->add( $this->logfile, '[ERROR]: ' . $err );
 
         if ( $this->send_email_on_error )
-          $this->wc_mail( $this->strings['transaction_error_subject'], $err );
+          $this->gestpay_email( $this->strings['transaction_error_subject'], $err );
 
         return false;
       }
@@ -605,7 +560,7 @@ function init_gestpay_starter_gateway() {
           $this->log->add( $this->logfile, '[ERROR]: ' . $err );
 
         if ( $this->send_email_on_error )
-          $this->wc_mail( $this->strings['transaction_error_subject'], $err );
+          $this->gestpay_email( $this->strings['transaction_error_subject'], $err );
 
         return false;
       }
@@ -622,7 +577,7 @@ function init_gestpay_starter_gateway() {
           $this->log->add( $this->logfile, '[ERROR]: ' . $err );
 
         if ( $this->send_email_on_error )
-          $this->wc_mail( $this->strings['transaction_error_subject'], $err );
+          $this->gestpay_email( $this->strings['transaction_error_subject'], $err );
 
         return false;
       }
@@ -682,12 +637,54 @@ function init_gestpay_starter_gateway() {
     }
 
 
+    /**
+     * Retrocompatibility get URL
+     */
+    function get_wc_url( $path, $order ) {
+      $url = '';
+
+      switch ( $path ) {
+
+        case 'view_order':
+
+          if ( version_compare( WOOCOMMERCE_VERSION, '2.1.0', '>=' ) ) {
+            $url = $order->get_view_order_url();
+          }
+          else {
+            $url = get_permalink( woocommerce_get_page_id( 'view_order' ) );
+          }
+          
+          break;
+
+        case 'order_received':
+
+          // if ( version_compare( WOOCOMMERCE_VERSION, '2.1.0', '>=' ) ) {
+          //   $url = $order->get_checkout_order_received_url();
+          // }
+          // else {
+          //   $url = get_permalink( woocommerce_get_page_id( 'order-received' ) );
+          // }
+
+          $url = $this->get_return_url( $order );
+
+          break;
+
+        default:
+
+          $url = '';
+      }
+
+      return $url;
+    }
+
+
     function check_wc_gestpay_starter_response() {
       if ( isset( $_GET['a'] ) && isset( $_GET['b'] ) ) {
         global $woocommerce;
 
-        if ( $this->debug )
+        if ( $this->debug ) {
           $this->log->add( $this->logfile, "[INFO]: " . $this->strings['gestpay_response'] );
+        }
 
         $params = new stdClass();
         $params->shopLogin = $_GET['a'];
@@ -704,7 +701,7 @@ function init_gestpay_starter_gateway() {
           $this->msg['message'] = $err;
 
           if ( $this->send_email_on_error )
-            $this->wc_mail( $this->strings['transaction_error_subject'], $err );
+            $this->gestpay_email( $this->strings['transaction_error_subject'], $err );
 
           if ( $this->debug )
             $this->log->add( $this->logfile, "[ERROR]: " . $err );
@@ -726,7 +723,7 @@ function init_gestpay_starter_gateway() {
             $this->log->add( $this->logfile, "[ERROR]: " . $err );
 
           if ( $this->send_email_on_error )
-            $this->wc_mail( $this->strings['transaction_error_subject'], $err );
+            $this->gestpay_email( $this->strings['transaction_error_subject'], $err );
 
           return false;
         }
@@ -736,26 +733,17 @@ function init_gestpay_starter_gateway() {
         $order_id = ( int ) $xml->ShopTransactionID;
         $order = new WC_Order( $order_id );
 
-    //    if ( $this->debug ) {
-    //      ob_start();
-    //      var_dump($order);
-    //      $result = ob_get_clean();
-    //      $this->log->add( $this->logfile, "[VAR-DUMP]: " . $result );
-    //    }
+        $order_link = '<a href="' . $this->get_wc_url( 'view_order', $order ) . '">' . $order_id . '</a>';
 
-        $order_url = get_permalink( woocommerce_get_page_id( 'view_order' ) );
-
-        $transaction = '<a href="' . esc_url( add_query_arg( 'order', $order_id, $order_url ) ) . '">' . $order_id . '</a>';
-
-        if ( $xml->TransactionResult == "OK" ) {
-          if ( $order->status !== 'completed' ) {
+        if ( $order->status !== 'completed' ) {
+          if ( $xml->TransactionResult == "OK" ) {
             if ( $order->status == 'processing' ) {
               // This is the second call - do nothing
               return true;
             }
             else {
               $this->msg['class'] = 'woocommerce_message';
-              $this->msg['message'] = sprintf( $this->strings['transaction_thankyou'], $transaction );
+              $this->msg['message'] = sprintf( $this->strings['transaction_thankyou'], $order_link );
 
               $this->show_message( "" );
 
@@ -766,33 +754,38 @@ function init_gestpay_starter_gateway() {
               $order->add_order_note( $msg );
               $woocommerce->cart->empty_cart();
 
-              if ( $this->debug )
+              if ( $this->debug ) {
                 $this->log->add( $this->logfile, "[INFO]: " . $msg );
+              }
             }
           }
           else {
+            $err_link = sprintf( $this->strings['transaction_error'], $order_link, ' (' . $xml->ErrorCode . ') ' . $xml->ErrorDescription );
+            $err_str = sprintf( $this->strings['transaction_error'], $order_id, ' (' . $xml->ErrorCode . ') ' . $xml->ErrorDescription );
+
+            // Set error message
+            $this->msg['class'] = 'woocommerce_error';
+            $this->msg['message'] = $err_link;
+
+            $order->update_status( 'failed', $err_str );
+
+            if ( $this->send_email_on_error )
+              $this->gestpay_email( $this->strings['transaction_error_subject'], $err_link );
+
             if ( $this->debug )
-              $this->log->add( $this->logfile, "[INFO]: " . sprintf( $this->strings['already_completed'], $order_id ) );
+              $this->log->add( $this->logfile, "[ERROR]: " . $err_str );
           }
+
+          if ( $this->show_message_on_end_page ) {
+            add_action( 'the_content', array( &$this, 'show_message' ) );
+          }
+
         }
         else {
-          $err_link = sprintf( $this->strings['transaction_error'], $transaction, ' (' . $xml->ErrorCode . ') ' . $xml->ErrorDescription );
-          $err_str = sprintf( $this->strings['transaction_error'], $order_id, ' (' . $xml->ErrorCode . ') ' . $xml->ErrorDescription );
-
-          // Set error message
-          $this->msg['class'] = 'woocommerce_error';
-          $this->msg['message'] = $err_link;
-
-          $order->update_status( 'failed', $err_str );
-
-          if ( $this->send_email_on_error )
-            $this->wc_mail( $this->strings['transaction_error_subject'], $err_link );
-
-          if ( $this->debug )
-            $this->log->add( $this->logfile, "[ERROR]: " . $err_str );
+          if ( $this->debug ) {
+            $this->log->add( $this->logfile, "[INFO]: " . sprintf( $this->strings['already_completed'], $order_id ) );
+          }
         }
-
-        add_action( 'the_content', array( &$this, 'show_message' ) );
       }
     }
 
@@ -816,7 +809,7 @@ HTML;
     /**
      * Send an email to the admin
      */
-    function wc_mail( $subject, $message ) {
+    function gestpay_email( $subject, $message ) {
       global $woocommerce;
       $to = get_settings( 'admin_email' );
       $mailer = $woocommerce->mailer();
@@ -848,6 +841,12 @@ function check_wc_gestpay_starter_response_new_wc() {
   if ( version_compare( WOOCOMMERCE_VERSION, '2.0.0', '>=' ) ) {
     if ( isset( $_GET['a'] ) && isset( $_GET['b'] ) ) {
       $gestpay_starter = new WC_Gateway_Gestpay_Starter();
+
+      if ( $gestpay_starter->debug ) {
+        $gestpay_starter->log->add( $gestpay_starter->logfile, "[INFO]: check_wc_gestpay_starter_response on newer WooCommerce..." );
+        $gestpay_starter->log->add( $gestpay_starter->logfile, "[INFO]: " . var_export( $_GET, true ) );
+      }
+
       $gestpay_starter->check_wc_gestpay_starter_response();
     }
   }
