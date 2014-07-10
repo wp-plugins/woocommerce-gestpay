@@ -1,0 +1,51 @@
+/*
+ * Author     : Mauro Mascia
+ * Description: Add some style to Gestpay Starter
+ */
+
+div.gestpay-starter-admin-main {
+  min-width: 500px;
+  max-width: 800px;
+  margin: 20px 50px;
+}
+
+div.gestpay-starter-admin-main h4 {
+  border-bottom: 1px solid #999;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  font-size: 14px;
+}
+
+div.gestpay-starter-message {
+  position: relative;
+  z-index: 100;
+  border: 1px solid #006633!important;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 0 15px rgba(0,0,0,0.04);
+  -moz-box-shadow: inset 0 0 15px rgba(0,0,0,0.04);
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.04);
+  overflow: hidden;
+  padding: 25px !important;
+  background: #00FF99;
+}
+
+div.gestpay-starter-form .form-table th, div.gestpay-starter-form .form-wrap label {
+  text-shadow: none;
+  font-weight: bold;
+}
+
+div.gestpay-starter-form .description {
+  color: #011a5d;
+}
+
+img#gestpay-starter-logo {
+  width: 100%;
+}
+
+img.onlypro {
+  position: absolute;
+  top: 0;
+  z-index: 1000;
+}
