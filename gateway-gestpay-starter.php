@@ -3,23 +3,21 @@
   Plugin Name: WooCommerce GestPay Starter
   Plugin URI: http://wordpress.org/plugins/woocommerce-gestpay/
   Description: Extends WooCommerce providing a payment gateway for the Starter (ex-Basic) version of the GestPay (Banca Sella) service.
-  Version: 20140710
+  Version: 20150217
   Author: Mauro Mascia (baba_mmx)
   Author URI: http://www.mauromascia.com
   License: GPLv2
   Support: info@mauromascia.com
 
-  Copyright © 2013,2014 Mauro Mascia
+  Copyright © 2013-2015 Mauro Mascia
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -43,7 +41,6 @@ function init_gestpay_starter_gateway() {
    * Add the gateway to WooCommerce.
    */
   add_filter( 'woocommerce_payment_gateways', 'woocommerce_gestpay_starter_add_gateway' );
-
   function woocommerce_gestpay_starter_add_gateway( $methods ) {
     $methods[] = 'WC_Gateway_Gestpay_Starter';
     return $methods;
@@ -98,9 +95,10 @@ function init_gestpay_starter_gateway() {
       }
 
       // Logs
-      if ( $this->debug ) {
-        $this->log = $woocommerce->logger();
+      if ( $this->debug && ( ! isset( $this->log ) || empty( $this->log ) ) ) {
+        $this->log = $this->wc_logger();
       }
+
 
       // Doesn't output a payment_box containing direct payment form
       $this->has_fields = false;
@@ -169,7 +167,7 @@ function init_gestpay_starter_gateway() {
           'default' => 'yes'
         ),
 
-        // -- GESTPAY PRO PARAMETERS
+      // -- GESTPAY PRO PARAMETERS
 
         'parameters' => array(
           'title' => __( 'GestPay Pro Parameters', 'woocommerce_gestpay_starter' ),
@@ -264,6 +262,7 @@ function init_gestpay_starter_gateway() {
           'default' => 'no',
           'class' => 'pro-disable-element'
         ),
+
 
         // -- TESTING
 
@@ -361,6 +360,7 @@ function init_gestpay_starter_gateway() {
               echo "<p>" . $string . "</p>";
             }
           ?>
+          <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WZHXKXW5M36D4" target="_blank">Qui puoi effettura una donazione libera allo sviluppatore.</a> Grazie!
         </div>
         <br><br>
         <div class="gestpay-starter-message gestpay-starter-form">
@@ -374,10 +374,9 @@ function init_gestpay_starter_gateway() {
         </div>
       </div>
       <?php
-      global $woocommerce;
-      $onlypro = WP_PLUGIN_URL . "/" . plugin_basename( dirname( __FILE__ ) ) . '/images/onlypro.png';
-      $woocommerce->add_inline_js( '
 
+      $onlypro = WP_PLUGIN_URL . "/" . plugin_basename( dirname( __FILE__ ) ) . '/images/onlypro.png';
+      $this->gestpay_enqueue_js( '
         jQuery( ".pro-disable-element" ).closest( "table" ).each( function() {
           h = jQuery( this ).height();
           jQuery( this ).css({
@@ -387,9 +386,8 @@ function init_gestpay_starter_gateway() {
           }).append( "<img class=\"onlypro\" src=\"'.$onlypro.'\" height=\""+h+"\" />" );
 
         });
-
         jQuery( ".pro-disable-element" ).attr( "disabled", true );
-		' );
+    ' );
     }
 
     /**
@@ -606,11 +604,11 @@ function init_gestpay_starter_gateway() {
 
       // Send the form to the GestPay server, using jQuery to auto-submit the form
       // If - for some reasons - javascript is disabled, show up two buttons to manually send the form
-      $woocommerce->add_inline_js( '
+      $this->gestpay_enqueue_js( '
         jQuery("body").block({
             message: "Thank you for your order. We are now redirecting you to GestPay to make payment.",
             baseZ: 99999,
-            overlayCSS:	{
+            overlayCSS: {
               background: "#fff",
               opacity: 0.6
             },
@@ -622,16 +620,16 @@ function init_gestpay_starter_gateway() {
               border:         "3px solid #aaa",
               backgroundColor:"#fff",
               cursor:         "wait",
-              lineHeight:		  "24px",
+              lineHeight:     "24px",
             }
           });
         jQuery("#submit_gestpay_starter_payment_form").click();
-		' );
+    ' );
 
       return '<form action="' . esc_url( $this->liveurl ) . '" method="post" id="gestpay_starter_payment_form" target="_top">
-				<input name="a" type="hidden" value="' . $this->shopLogin . '">
+        <input name="a" type="hidden" value="' . $this->shopLogin . '">
         <input name="b" type="hidden" value="' . $b_param . '">
-				<input type="submit" class="button alt" id="submit_gestpay_starter_payment_form" value="' . __( 'Pay via GestPay Starter', 'woocommerce' ) . '" />
+        <input type="submit" class="button alt" id="submit_gestpay_starter_payment_form" value="' . __( 'Pay via GestPay Starter', 'woocommerce' ) . '" />
         <a class="button cancel" href="'.esc_url( $order->get_cancel_order_url() ).'">'.__( 'Cancel order &amp; restore cart', 'woocommerce' ).'</a>
         </form>';
     }
@@ -816,6 +814,47 @@ HTML;
       $mailer->wrap_message( $subject, $message );
       $mailer->send( $to, '[GESTPAY-STARTER] ' . $subject, $message );
     }
+
+    function gestpay_enqueue_js( $code ) {
+      if ( ! $this->is_wc_gte_21() ) {
+        global $woocommerce;
+        return $woocommerce->add_inline_js( $code );
+      }
+      else {
+        wc_enqueue_js( $code );
+      }
+    }
+
+    /**
+     * Backwards compatible woocommerce log.
+     */
+    function wc_logger() {
+      if ( ! $this->is_wc_gte_21() ) {
+        global $woocommerce;
+        return $woocommerce->logger();
+      }
+      else {
+        // See wp-admin/admin.php?page=wc-status&tab=logs
+        return new WC_Logger();
+      }
+    }
+
+    /**
+     * Returns the WooCommerce version number, backwards compatible to WC 1.x
+     * @return null|string
+     */
+    function get_wc_version() {
+      if ( defined( 'WC_VERSION' ) && WC_VERSION ) return WC_VERSION;
+      if ( defined( 'WOOCOMMERCE_VERSION' ) && WOOCOMMERCE_VERSION ) return WOOCOMMERCE_VERSION;
+      return null;
+    }
+
+    /* short checks */
+    function is_wc_gte_20() { return version_compare( $this->get_wc_version(), '2.0.0', '>=' ); }
+    function is_wc_gte_21() { return version_compare( $this->get_wc_version(), '2.1.0', '>=' ); }
+    function is_wc_gte_22() { return version_compare( $this->get_wc_version(), '2.2.0', '>=' ); }
+
+
 
   }
 

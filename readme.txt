@@ -3,8 +3,8 @@ Contributors: baba_mmx
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WZHXKXW5M36D4
 Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo
 Requires at least: 3.0.1
-Tested up to: 3.9.1
-Stable tag: 20140710
+Tested up to: 4.1
+Stable tag: 20150217
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,6 +107,9 @@ Send me an email at **info@mauromascia.com** and we'll talk about it.
 3. Configuration panel
 
 == Changelog ==
+
+= 20150217 =
+* Fix compatibilità con WooCommerce 2.3.3
 
 = 20140710 =
 * Aggiunta gestione della pagina view_order e order_received di WooCommerce.
