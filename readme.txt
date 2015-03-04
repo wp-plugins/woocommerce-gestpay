@@ -108,6 +108,9 @@ Send me an email at **info@mauromascia.com** and we'll talk about it.
 
 == Changelog ==
 
+= 20150303 =
+* Fix compatibilità email Woocommerce 2.3.x
+
 = 20150217 =
 * Fix compatibilità con WooCommerce 2.3.3
 

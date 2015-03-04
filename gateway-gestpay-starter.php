@@ -3,7 +3,7 @@
   Plugin Name: WooCommerce GestPay Starter
   Plugin URI: http://wordpress.org/plugins/woocommerce-gestpay/
   Description: Extends WooCommerce providing a payment gateway for the Starter (ex-Basic) version of the GestPay (Banca Sella) service.
-  Version: 20150217
+  Version: 20150303
   Author: Mauro Mascia (baba_mmx)
   Author URI: http://www.mauromascia.com
   License: GPLv2
@@ -24,13 +24,9 @@
  */
 
 add_action( 'plugins_loaded', 'init_gestpay_starter_gateway' );
-
 function init_gestpay_starter_gateway() {
 
-  if ( ! class_exists( 'WC_Payment_Gateways' ) ) {
-    // No error messages, do not bore the user.
-    return;
-  }
+  if ( ! class_exists( 'WC_Payment_Gateways' ) ) { return; }
 
   if ( ! extension_loaded( 'soap' ) ) {
     echo '<div id="message" class="error"><p>ERRORE: Per poter utilizzare GESTPAY STARTER la libreria SOAP client di PHP deve essere abilitata!</p></div>';
@@ -113,7 +109,7 @@ function init_gestpay_starter_gateway() {
       // Questa genera una doppia chiamata alla pagina di ordine ricevuto.
       add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
 
-      if ( version_compare( WOOCOMMERCE_VERSION, '2.0.0', '>=' ) ) {
+      if ( version_compare( wc_gestpay_starter_get_wc_version(), '2.0.0', '>=' ) ) {
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
       }
       else {
@@ -290,7 +286,7 @@ function init_gestpay_starter_gateway() {
           'type' => 'checkbox',
           'label' => __( 'Enable logging events', 'woocommerce_gestpay_starter' ),
           'default' => 'no',
-          'description' => sprintf( __( 'Log GestPay Starter events inside the woocommerce/logs/%s.txt file', 'woocommerce_gestpay_starter' ), version_compare( WOOCOMMERCE_VERSION, '2.0.0', '>=' ) ? $this->logfile . "-" . sanitize_file_name( wp_hash( $this->logfile ) ) : $this->logfile ),
+          'description' => sprintf( __( 'Log GestPay Starter events inside the woocommerce/logs/%s.txt file', 'woocommerce_gestpay_starter' ), version_compare( wc_gestpay_starter_get_wc_version(), '2.0.0', '>=' ) ? $this->logfile . "-" . sanitize_file_name( wp_hash( $this->logfile ) ) : $this->logfile ),
         ),
 
         // -- EXPERIMENTAL
@@ -645,7 +641,7 @@ function init_gestpay_starter_gateway() {
 
         case 'view_order':
 
-          if ( version_compare( WOOCOMMERCE_VERSION, '2.1.0', '>=' ) ) {
+          if ( version_compare( wc_gestpay_starter_get_wc_version(), '2.1.0', '>=' ) ) {
             $url = $order->get_view_order_url();
           }
           else {
@@ -656,7 +652,7 @@ function init_gestpay_starter_gateway() {
 
         case 'order_received':
 
-          // if ( version_compare( WOOCOMMERCE_VERSION, '2.1.0', '>=' ) ) {
+          // if ( version_compare( wc_gestpay_starter_get_wc_version(), '2.1.0', '>=' ) ) {
           //   $url = $order->get_checkout_order_received_url();
           // }
           // else {
@@ -839,22 +835,10 @@ HTML;
       }
     }
 
-    /**
-     * Returns the WooCommerce version number, backwards compatible to WC 1.x
-     * @return null|string
-     */
-    function get_wc_version() {
-      if ( defined( 'WC_VERSION' ) && WC_VERSION ) return WC_VERSION;
-      if ( defined( 'WOOCOMMERCE_VERSION' ) && WOOCOMMERCE_VERSION ) return WOOCOMMERCE_VERSION;
-      return null;
-    }
-
     /* short checks */
-    function is_wc_gte_20() { return version_compare( $this->get_wc_version(), '2.0.0', '>=' ); }
-    function is_wc_gte_21() { return version_compare( $this->get_wc_version(), '2.1.0', '>=' ); }
-    function is_wc_gte_22() { return version_compare( $this->get_wc_version(), '2.2.0', '>=' ); }
-
-
+    function is_wc_gte_20() { return version_compare( wc_gestpay_starter_get_wc_version(), '2.0.0', '>=' ); }
+    function is_wc_gte_21() { return version_compare( wc_gestpay_starter_get_wc_version(), '2.1.0', '>=' ); }
+    function is_wc_gte_22() { return version_compare( wc_gestpay_starter_get_wc_version(), '2.2.0', '>=' ); }
 
   }
 
@@ -875,18 +859,22 @@ HTML;
  * - http://www.mrova.com/lets-create-a-payment-gateway-plugin-payu-for-woocommerce/
  */
 
-add_action( 'init', 'check_wc_gestpay_starter_response_new_wc' );
+add_action( 'init', 'check_wc_gestpay_starter_response_new_wc', 999 );
 function check_wc_gestpay_starter_response_new_wc() {
-  if ( version_compare( WOOCOMMERCE_VERSION, '2.0.0', '>=' ) ) {
+  if ( version_compare( wc_gestpay_starter_get_wc_version(), '2.0.0', '>=' ) ) {
     if ( isset( $_GET['a'] ) && isset( $_GET['b'] ) ) {
       $gestpay_starter = new WC_Gateway_Gestpay_Starter();
-
-      if ( $gestpay_starter->debug ) {
-        $gestpay_starter->log->add( $gestpay_starter->logfile, "[INFO]: check_wc_gestpay_starter_response on newer WooCommerce..." );
-        $gestpay_starter->log->add( $gestpay_starter->logfile, "[INFO]: " . var_export( $_GET, true ) );
-      }
-
       $gestpay_starter->check_wc_gestpay_starter_response();
     }
   }
+}
+
+/**
+ * Returns the WooCommerce version number, backwards compatible to WC 1.x
+ * @return null|string
+ */
+function wc_gestpay_starter_get_wc_version() {
+  if ( defined( 'WC_VERSION' ) && WC_VERSION ) return WC_VERSION;
+  if ( defined( 'WOOCOMMERCE_VERSION' ) && WOOCOMMERCE_VERSION ) return WOOCOMMERCE_VERSION;
+  return null;
 }
