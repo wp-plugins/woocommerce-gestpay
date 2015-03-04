@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo
 Requires at least: 3.0.1
 Tested up to: 4.1
-Stable tag: 20150217
+Stable tag: 20150303
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -118,36 +118,3 @@ Send me an email at **info@mauromascia.com** and we'll talk about it.
 * Aggiunta gestione della pagina view_order e order_received di WooCommerce.
 * Aggiunta opzione per mostrare/nascondere il messaggio addizionale di ordine ricevuto.
 * Corretto link all'ordine nel messaggio di ordine ricevuto.
-
-= 2.2.4 =
-* Moved translation string back to the main class for a better WC 2.1 compatibility.
-
-= 2.2.3 =
-* Added error message if SOAP client is not available
-
-= 2.2.2 =
-* Updated Readme with the right link to the Pro version
-
-= 2.2.1 =
-Fixed SVN commit
-
-= 2.2.0 =
-* Global refactoring of the code with better handling of options and translations
-* Better back office presentation
-* Solved compatibility issues between old and new WooCommerce versions
-* Added informations about the Pro version
-* Better error handling (log + email)
-* Added experimental features
-* Updated the name (it was "Basic", now it's called "Starter")
-
-= 2.1 =
-* Various changes
-
-= 2.0 =
-* Updated code for the last WooCommerce version (2.0)
-
-= 1.0.1 =
-* Added: Better error handling
-
-= 1.0 =
-* First release
