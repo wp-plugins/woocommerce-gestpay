@@ -3,8 +3,8 @@ Contributors: baba_mmx
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WZHXKXW5M36D4
 Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo
 Requires at least: 3.0.1
-Tested up to: 4.1
-Stable tag: 20150217
+Tested up to: 4.1.1
+Stable tag: 20150314
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,7 +84,6 @@ ma non è detto che rimangano sempre e solo questi.
 Purtroppo da parte mia non c'è molto da fare, quindi vi consiglio di prendere contatti sia con gli operatori di Banca Sella, sia con il vostro provider di hosting.
 
 
-
 == Installation ==
 
 1. Unzip the archive of the plugin or download it from the [official Wordpress plugin repository](http://wordpress.org/extend/plugins/woocommerce-gestpay/ "Woocommerce Gestpay")
@@ -92,13 +91,6 @@ Purtroppo da parte mia non c'è molto da fare, quindi vi consiglio di prendere c
 3. Activate the plugin through the 'Plugins' menu in WordPress (WooCommerce - of course - MUST be already enabled!)
 4. Configure it under WooCommerce -> Settings -> Payment Gateways and click on the **Gestpay Starter** link
 
-== Frequently Asked Questions ==
-
-= Do I need to edit any files? =
-No, once followed the installation instruction you have done. Just check for file permissions (chmod +x).
-
-= I need some plugin modifications. How can I tell you what I want? =
-Send me an email at **info@mauromascia.com** and we'll talk about it.
 
 == Screenshots ==
 
@@ -108,6 +100,12 @@ Send me an email at **info@mauromascia.com** and we'll talk about it.
 
 == Changelog ==
 
+= 20150314 =
+* Fix altre compatibilità Woocommerce 2.3.x
+
+= 20150303 =
+* Fix compatibilità email Woocommerce 2.3.x
+
 = 20150217 =
 * Fix compatibilità con WooCommerce 2.3.3
 
@@ -115,36 +113,3 @@ Send me an email at **info@mauromascia.com** and we'll talk about it.
 * Aggiunta gestione della pagina view_order e order_received di WooCommerce.
 * Aggiunta opzione per mostrare/nascondere il messaggio addizionale di ordine ricevuto.
 * Corretto link all'ordine nel messaggio di ordine ricevuto.
-
-= 2.2.4 =
-* Moved translation string back to the main class for a better WC 2.1 compatibility.
-
-= 2.2.3 =
-* Added error message if SOAP client is not available
-
-= 2.2.2 =
-* Updated Readme with the right link to the Pro version
-
-= 2.2.1 =
-Fixed SVN commit
-
-= 2.2.0 =
-* Global refactoring of the code with better handling of options and translations
-* Better back office presentation
-* Solved compatibility issues between old and new WooCommerce versions
-* Added informations about the Pro version
-* Better error handling (log + email)
-* Added experimental features
-* Updated the name (it was "Basic", now it's called "Starter")
-
-= 2.1 =
-* Various changes
-
-= 2.0 =
-* Updated code for the last WooCommerce version (2.0)
-
-= 1.0.1 =
-* Added: Better error handling
-
-= 1.0 =
-* First release
