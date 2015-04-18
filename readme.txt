@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo
 Requires at least: 3.0.1
 Tested up to: 4.1.1
-Stable tag: 20150314
+Stable tag: 20150418
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,16 +20,25 @@ Extends WooCommerce providing a payment gateway for the Starter (ex-Basic) versi
 
 = Note sulle versioni =
 
-La versione [Starter](https://www.gestpay.it/gestpay/offerta/starter.jsp "GestPay Starter") (chiamata precedentemente Basic) consente di effettuare i pagamenti con le più diffuse carte di credito e tramite PayPal.
+La versione [Starter](https://www.gestpay.it/gestpay/offerta/starter.jsp "GestPay Starter") consente di effettuare i pagamenti con le più diffuse carte di credito (e opzionalmente tramite PayPal).
+
 A differenza della versione Professional **non consente di**:
 
 * Gestire pagamenti in valuta diversa da euro
 * Pianificare invii automatici dei report via mail (Opzione disponibile solo nel backoffice di Sella)
 * Personalizzare i filtri per le estrazioni dei dati sui pagamenti (Opzione disponibile solo nel backoffice di Sella)
 * Personalizzare automaticamente la lingua sulla pagina di pagamento
+* Specificare parametri addizionali
 
 La versione Professional è [acquistabile sul mio sito](http://www.mauromascia.com/shop/product/woocommerce-gestpay-professional-banca-sella "GestPay Professional su mauromascia.com") e consentirà di specificare alcuni parametri tra cui la lingua del back office di pagamento di GestPay.
 Un'altra funzionalità disponibile solo nella versione Pro è quella di specificare le icone relative alle carte effettivamente abilitate.
+In generale la versione Professional, essendo a pagamento, è aggiornata con una frequenza maggiore oltre ad avere un mio supporto tecnico diretto nel giro di 24/48 ore.
+La versione Professional è totalmente compatibile con la versione Starter (poiché aggiunge funzionalità) quindi può essere acquistata anche per ricevere un supporto tecnico più rapido o comunque per contribuire a mantenere sempre aggiornata anche la versione Starter.
+
+Vi ricordo che è sempre possibile effettuare una gradita e libera [DONAZIONE](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WZHXKXW5M36D4 "Donazione GestPay Starter") ;)
+
+Per mostrare all'utente la pagina di ordine ricevuto con le informazioni sull'ordine è necessario specificare la URL di risposta positiva e negativa come http://www.tuosito.com/?wc-api=WC_Gateway_Gestpay_Starter
+In questo modo, al ritorno dal pagamento, il plugin farà una verifica sulla URL e trovando wc-api=WC_Gateway_Gestpay_Starter effettuarà un redirect trasparente verso la pagina di ordine ricevuto con i parametri corretti specificati (n. dell'ordine e key).
 
 Per maggiori informazioni contattemi all'indirizzo: **info@mauromascia.com**
 
@@ -99,6 +108,9 @@ Purtroppo da parte mia non c'è molto da fare, quindi vi consiglio di prendere c
 3. Configuration panel
 
 == Changelog ==
+
+= 20150418 =
+* Aggiunto ritorno automatico verso la pagina di ordine ricevuto quando nelle opzioni di GestPay viene specificata la pagina di ritorno come http://www.tuosito.com/?wc-api=WC_Gateway_Gestpay_Starter
 
 = 20150314 =
 * Fix altre compatibilità Woocommerce 2.3.x
