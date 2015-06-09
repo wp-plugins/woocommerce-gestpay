@@ -705,7 +705,6 @@ function init_gestpay_starter_gateway() {
           if ( $xml->TransactionResult == "OK" ) {
             if ( $order->status == 'processing' ) {
               // This is the second call - do nothing
-              return true;
             }
             else {
               $this->msg['class'] = 'woocommerce_message';
