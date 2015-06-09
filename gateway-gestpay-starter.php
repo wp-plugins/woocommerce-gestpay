@@ -3,7 +3,7 @@
   Plugin Name: WooCommerce GestPay Starter
   Plugin URI: http://wordpress.org/plugins/woocommerce-gestpay/
   Description: Estende WooCommerce fornendo il gateway di pagamento GestPay Starter di Banca Sella.
-  Version: 20150418
+  Version: 20150610
   Author: Mauro Mascia (baba_mmx)
   Author URI: http://www.mauromascia.com
   License: GPLv2

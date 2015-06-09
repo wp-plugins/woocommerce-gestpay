@@ -3,8 +3,8 @@ Contributors: baba_mmx
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WZHXKXW5M36D4
 Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo
 Requires at least: 3.0.1
-Tested up to: 4.1.1
-Stable tag: 20150418
+Tested up to: 4.2.2
+Stable tag: 20150610
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -108,6 +108,12 @@ Purtroppo da parte mia non c'è molto da fare, quindi vi consiglio di prendere c
 3. Configuration panel
 
 == Changelog ==
+
+= 20150610 =
+* Fix commit
+
+= 20150609 =
+* Fix return true for the second call
 
 = 20150418 =
 * Aggiunto ritorno automatico verso la pagina di ordine ricevuto quando nelle opzioni di GestPay viene specificata la pagina di ritorno come http://www.tuosito.com/?wc-api=WC_Gateway_Gestpay_Starter
