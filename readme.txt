@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woocommerce, payment gateway, payment, credit card, gestpay, gestpay starter, gestpay pro, gestpay professional, banca sella, sella.it, easynolo
 Requires at least: 3.0.1
 Tested up to: 4.2.2
-Stable tag: 20150610
+Stable tag: 20150627
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -108,6 +108,9 @@ Purtroppo da parte mia non c'è molto da fare, quindi vi consiglio di prendere c
 3. Configuration panel
 
 == Changelog ==
+
+= 20150627 =
+* Aggiunte azioni wc_gestpay_starter_request_error e wc_gestpay_starter_response_error
 
 = 20150610 =
 * Fix commit
